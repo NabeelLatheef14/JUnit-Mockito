@@ -41,6 +41,7 @@ public class OrderBOImplTest {
     @Test
     void placeOrderShouldCreateAnOrder() throws SQLException, BOException {
         Order order = new Order();
+        //Matcher is added
         when(dao.create(any(Order.class))).thenReturn(ONE);
         boolean result = bo.placeOrder(order);
         assertTrue(result);
