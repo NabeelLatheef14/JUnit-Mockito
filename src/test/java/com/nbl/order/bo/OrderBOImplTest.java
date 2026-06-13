@@ -14,6 +14,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.sql.SQLException;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -40,7 +41,8 @@ public class OrderBOImplTest {
     @Test
     void placeOrderShouldCreateAnOrder() throws SQLException, BOException {
         Order order = new Order();
-        when(dao.create(order)).thenReturn(ONE);
+        //Matcher is added
+        when(dao.create(any(Order.class))).thenReturn(ONE);
         boolean result = bo.placeOrder(order);
         assertTrue(result);
         verify(dao).create(order);
@@ -101,6 +103,30 @@ public class OrderBOImplTest {
         when(dao.update(order)).thenThrow(SQLException.class);
         Assertions.assertThrows(BOException.class, ()-> {
             bo.cancelOrder(ID);
+        });
+    }
+
+    @Test
+    public void deleteOrderShouldDeleteTheOrder() throws SQLException, BOException {
+        when(dao.delete(ID)).thenReturn(ONE);
+        boolean result = bo.deleteOrder(ID);
+        assertTrue(result);
+        verify(dao).delete(ID);
+    }
+
+    @Test
+    public void deleteOrderShouldNotDeleteTheOrder() throws SQLException, BOException {
+        when(dao.delete(ID)).thenReturn(ZERO);
+        boolean result = bo.deleteOrder(ID);
+        assertFalse(result);
+        verify(dao).delete(ID);
+    }
+
+    @Test
+    public void deleteOrderShouldThrowBOExceptionOnDelete() throws SQLException, BOException {
+        when(dao.delete(ID)).thenThrow(SQLException.class);
+        Assertions.assertThrows(BOException.class, ()-> {
+            bo.deleteOrder(ID);
         });
     }
 

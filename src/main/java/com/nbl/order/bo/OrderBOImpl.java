@@ -31,6 +31,7 @@ public class OrderBOImpl implements OrderBO{
 
         try{
             Order order = dao.read(id);
+            //Update status to Cancelled
             order.setStaus("Cancelled");
             int result = dao.update(order);
 
@@ -60,10 +61,6 @@ public class OrderBOImpl implements OrderBO{
 
         return true;
 
-    }
-
-    public OrderDAO getDao() {
-        return dao;
     }
 
     public void setDao(OrderDAO dao) {
